@@ -1,0 +1,34 @@
+import connectDB from "@/lib/db";
+import Bank from "@/models/Bank";
+
+export async function DELETE(req) {
+  try {
+    await connectDB();
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Bank ID required" }), {
+        status: 400,
+      });
+    }
+
+    const deletedBank = await Bank.findByIdAndDelete(id);
+
+    if (!deletedBank) {
+      return new Response(JSON.stringify({ error: "Bank not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify({ message: "Bank deleted successfully" }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error deleting bank:", error);
+    return new Response(JSON.stringify({ error: "Failed to delete bank" }), {
+      status: 500,
+    });
+  }
+}

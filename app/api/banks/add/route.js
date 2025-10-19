@@ -4,23 +4,18 @@ import Bank from "@/models/Bank";
 export async function POST(req) {
   try {
     await connectDB();
-    const body = await req.json();
-    const { name, logo } = body;
+    const { name, logo } = await req.json();
 
-    if (!name || !logo)
-      return new Response(JSON.stringify({ error: "All fields required" }), {
+    if (!name || !logo) {
+      return new Response(JSON.stringify({ error: "Name and logo required" }), {
         status: 400,
       });
+    }
 
-    const existing = await Bank.findOne({ name });
-    if (existing)
-      return new Response(
-        JSON.stringify({ error: "Bank already exists" }),
-        { status: 400 }
-      );
+    const newBank = new Bank({ name, logo });
+    await newBank.save();
 
-    const bank = await Bank.create({ name, logo });
-    return new Response(JSON.stringify(bank), { status: 201 });
+    return new Response(JSON.stringify(newBank), { status: 201 });
   } catch (error) {
     console.error("Error adding bank:", error);
     return new Response(JSON.stringify({ error: "Failed to add bank" }), {

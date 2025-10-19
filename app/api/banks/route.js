@@ -1,4 +1,4 @@
-import connectDB from "@/lib/db";
+import {connectDB} from "@/lib/db";
 import Bank from "@/models/Bank";
 
 export async function GET() {

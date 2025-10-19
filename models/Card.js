@@ -5,7 +5,7 @@ const CardSchema = new mongoose.Schema(
     name: { type: String, required: true },
     image: String,
     category: String,
-    bank: String,
+    bank: {type: String, required: true},
     features: [String],
     eligibility: [String],
     whoShouldBuy: [String],
